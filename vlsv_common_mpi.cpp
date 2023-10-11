@@ -105,7 +105,7 @@ namespace vlsv {
       switch (dt) {
        case datatype::UNKNOWN:
          // TEST
-         cerr << "(VLSV) ERROR: VLSV::getMPIDatatype called with datatype::UNKNOWN datatype, returning MPI_DATATYPE_NULL!" << endl;
+         //cerr << "(VLSV) ERROR: VLSV::getMPIDatatype called with datatype::UNKNOWN datatype, returning MPI_DATATYPE_NULL!" << endl;
          // END TEST
          return MPI_DATATYPE_NULL;
          break;

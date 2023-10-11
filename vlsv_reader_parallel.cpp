@@ -55,9 +55,9 @@ namespace vlsv {
       if (arrayElements == 0) return true;
       
       // Get the byte size of the MPI primitive datatype (MPI_INT etc.) used here:
-      int datatypeBytesize;
-      MPI_Type_size(getMPIDatatype(arrayOpen.dataType,arrayOpen.dataSize),&datatypeBytesize);
-
+      //int datatypeBytesize;
+      //MPI_Type_size(getMPIDatatype(arrayOpen.dataType,arrayOpen.dataSize),&datatypeBytesize);
+      int datatypeBytesize = arrayOpen.dataSize;
       // Calculate the maximum number of array elements written using a single multi-write.
       // Note: element = vector of size vectorSize, each vector element has byte size of datatypeBytesize.
       const size_t maxElementsPerRead = getMaxBytesPerRead() / (datatypeBytesize*arrayOpen.vectorSize);
@@ -82,11 +82,22 @@ namespace vlsv {
                               offset));
          }
       } else {
-         multiReadUnits.push_back(
+         /*multiReadUnits.push_back(
              Multi_IO_Unit(buffer,
                            getMPIDatatype(arrayOpen.dataType,arrayOpen.dataSize),
                            arrayElements*arrayOpen.vectorSize,
-                           offset));
+                           offset));*/
+	 if ( getMPIDatatype(arrayOpen.dataType,arrayOpen.dataSize) == MPI_DATATYPE_NULL ) {
+	    multiReadUnits.push_back(Multi_IO_Unit(buffer,
+						   MPI_Type<uint8_t>(),
+						   arrayElements*arrayOpen.vectorSize*arrayOpen.dataSize,
+						   offset));
+	 } else {
+	    multiReadUnits.push_back(Multi_IO_Unit(buffer,
+						   getMPIDatatype(arrayOpen.dataType,arrayOpen.dataSize),
+						   arrayElements*arrayOpen.vectorSize,
+						   offset));
+	 }
       }
       
       return success;
